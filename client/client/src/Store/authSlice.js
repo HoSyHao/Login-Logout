@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
 const initialState = {
   user: null,
@@ -71,20 +70,19 @@ export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValu
 
 
 export const verify = createAsyncThunk('auth/verify', async (_, { rejectWithValue }) => {
-  try {
-    // Sử dụng js-cookie để lấy token từ cookies
-    const token = Cookies.get('token');
-    const response = await axios.get('http://localhost:3000/auth/verify', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    if (response.data.status === false) {
-      return rejectWithValue(response.data.message);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:3000/auth/verify', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.status === false) {
+        return rejectWithValue(response.data.message);
+      }
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || 'Something went wrong');
     }
-    return response.data;
-  } catch (err) {
-    return rejectWithValue(err.response?.data?.message || 'Something went wrong');
-  }
-});
+  });
   
 
 const authSlice = createSlice({

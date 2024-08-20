@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { signup } from '../Store/authSlice';
 import { useNavigate, Link } from "react-router-dom";
